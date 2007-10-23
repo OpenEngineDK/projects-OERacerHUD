@@ -4,6 +4,7 @@ SET( OERACER_SOURCES
   # Add all the cpp source files here
   main.cpp
   GameFactory.cpp
+  MoveHandler.cpp
 )
 
 # todo get rid of this!@#!
@@ -27,5 +28,4 @@ TARGET_LINK_LIBRARIES(OERacer
   OpenEngine_Scene
   # Extensions
   Extensions_FixedTimeStepPhysics
-  Extensions_GenericHandlers
 )

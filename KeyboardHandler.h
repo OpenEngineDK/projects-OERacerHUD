@@ -1,10 +1,12 @@
 #ifndef _KEYBOARD_HANDLER_
 #define _KEYBOARD_HANDLER_
 
+#include <Devices/IKeyboard.h>
 #include <Display/Camera.h>
 #include <Physics/FixedTimeStepPhysics.h>
 #include <Physics/RigidBox.h>
 
+using namespace OpenEngine::Devices;
 using namespace OpenEngine::Physics;
 
 class KeyboardHandler : public IModule {

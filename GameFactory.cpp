@@ -43,13 +43,11 @@
 #include <Physics/FixedTimeStepPhysics.h>
 #include <Physics/RigidBox.h>
 
-// from GenericHandler extension
-#include <Utils/RenderStateHandler.h>
-#include <Utils/MoveHandler.h>
-#include <Utils/QuitHandler.h>
-
 // Project files
 #include "KeyboardHandler.h"
+#include "RenderStateHandler.h"
+#include "MoveHandler.h"
+#include "QuitHandler.h"
 
 // Additional namespaces (others are in the header).
 using namespace OpenEngine::Devices;
