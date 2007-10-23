@@ -31,28 +31,30 @@ public:
         static float turn = 550.0f;
         Matrix<3,3,float> m; //orientation
         if( up || down || left || right ) m = box->GetRotationMatrix();
+
+        float delta = deltaTime / 1000 * 8;
         // Forward 
         if( up ){
-            Vector<3,float> dir = m.GetRow(0);
+            Vector<3,float> dir = m.GetRow(0) * delta;
             box->AddForce(dir * speed, 1);
             box->AddForce(dir * speed, 2);
             box->AddForce(dir * speed, 3);
             box->AddForce(dir * speed, 4);
         }
         if( down ){
-            Vector<3,float> dir = -m.GetRow(0);
+            Vector<3,float> dir = -m.GetRow(0) * delta;
             box->AddForce(dir * speed, 5);
             box->AddForce(dir * speed, 6);
             box->AddForce(dir * speed, 7);
             box->AddForce(dir * speed, 8);
         }
         if( left ){
-            Vector<3,float> dir = -m.GetRow(2);
+            Vector<3,float> dir = -m.GetRow(2) * delta;
             box->AddForce(dir * turn, 2);
             box->AddForce(dir * turn, 4);
         }
         if( right ) {
-            Vector<3,float> dir = m.GetRow(2);
+            Vector<3,float> dir = m.GetRow(2) * delta;
             box->AddForce(dir * turn, 1);
             box->AddForce(dir * turn, 3);
         }

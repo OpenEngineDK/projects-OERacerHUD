@@ -241,9 +241,8 @@ bool GameFactory::SetupEngine(IGameEngine& engine) {
     //frustum->VisualizeClipping(true);
     //rNode->AddNode(frustum->GetFrustumNode());
 
-    // add the RigidBox to the scene
-    if (box != NULL)
-    rNode->AddNode( box->GetRigidBoxNode() );
+    // add the RigidBox to the scene, for debuging
+    //if (box != NULL) rNode->AddNode( box->GetRigidBoxNode() );
     
     // Keyboard bindings to the rigid box and camera
     KeyboardHandler* keyHandler = new KeyboardHandler(camera,box,physic);
