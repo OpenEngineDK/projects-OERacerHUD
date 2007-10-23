@@ -1,0 +1,17 @@
+Sahara001/Skybox.obj
+
+dynamic
+FutureTank/model.obj
+#FutureTankShaded/FutureTankShaded.obj
+#CetattaShaded/CetattaShaded.obj
+
+static
+Sahara001/Bridge001.obj
+Sahara001/Building001.obj
+Sahara001/Building002.obj
+Sahara001/Building003.obj
+Sahara001/Ground.obj
+Sahara001/Road.obj
+
+physic
+Sahara001/Road.obj
