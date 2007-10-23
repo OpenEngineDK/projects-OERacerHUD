@@ -232,7 +232,7 @@ bool GameFactory::SetupEngine(IGameEngine& engine) {
     engine.AddModule(*physic, IGameEngine::TICK_DEPENDENT);
 
     logger.info << "Preprocessing of static tree: started" << logger.end;
-    QuadTreeBuilder qtb(5000,100);
+    QuadTreeBuilder qtb(500,100);
     QuadNode* qn = qtb.Build(*staticObjects);
     rNode->AddNode(qn);
     logger.info << "Preprocessing of static tree: done" << logger.end;
