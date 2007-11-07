@@ -10,7 +10,7 @@ SET( OERACER_SOURCES
 # todo get rid of this!@#!
 # Include if using SDL under Mac OS X
 IF(APPLE)
-  SET(OERACER_SOURCES ${OERACER_SOURCES} ../conf/mac/SDLMain.m)
+  SET(OERACER_SOURCES ${OERACER_SOURCES} ../../conf/mac/SDLMain.m)
 ENDIF(APPLE)
 
 # Project executable
