@@ -142,7 +142,7 @@ bool GameFactory::SetupEngine(IGameEngine& engine) {
     
     // set the resources directory
     string resources = "projects/OERacer/data/";
-    ResourceManager::SetPath(resources);
+    ResourceManager::AppendPath(resources);
     logger.info << "Resource directory: " << resources << logger.end;
 
     // load the resource plug-ins
