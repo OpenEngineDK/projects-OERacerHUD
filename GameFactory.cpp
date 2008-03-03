@@ -7,6 +7,10 @@
 // See the GNU General Public License for more details (see LICENSE). 
 //--------------------------------------------------------------------
 
+// Serialization (must be first)
+#include <fstream>
+#include <Utils/Serialization.h>
+
 // Class header
 #include "GameFactory.h"
 
@@ -34,9 +38,10 @@
 #include <Utils/Statistics.h>
 
 // from AccelerationStructures extension
-#include <Scene/QuadTreeBuilder.h>
-#include <Scene/QuadBSPBuilder.h>
-#include <Scene/BSPTreeBuilder.h>
+#include <Scene/CollectedGeometryTransformer.h>
+#include <Scene/QuadTransformer.h>
+#include <Scene/BSPTransformer.h>
+#include <Scene/ASDotVisitor.h>
 #include <Renderers/AcceleratedRenderingView.h>
 
 // from FixedTimeStepPhysics
@@ -219,22 +224,58 @@ bool GameFactory::SetupEngine(IGameEngine& engine) {
     delete mfile;
     
     rNode->AddNode(dynamicObjects);
-        
-    // Process static tree
-    logger.info << "Preprocessing of physics tree: started" << logger.end;
-    QuadBSPBuilder quadbsp;
-    QuadNode* hybridTreeRoot = quadbsp.Build(*physicObjects);
+
+    ISceneNode* hybridTreeRoot = new SceneNode();
+
+    ifstream isf("oeracer-physics-scene.bin", ios::binary);
+    if (isf.is_open()) {
+        logger.info << "Loading the physics tree from file: started" << logger.end;
+        Serialization::Deserialize(*hybridTreeRoot, &isf);
+        isf.close();
+        logger.info << "Loading the physics tree from file: done" << logger.end;
+    } else {
+        isf.close();
+        logger.info << "Creating and serializing the physics tree: started" << logger.end;
+        // set the root to the loaded objects
+        delete hybridTreeRoot;
+        hybridTreeRoot = physicObjects;
+        // transform the object tree to a hybrid Quad/BSP
+        CollectedGeometryTransformer collT;
+        QuadTransformer quadT;
+        BSPTransformer bspT;
+        collT.Transform(*hybridTreeRoot);
+        quadT.Transform(*hybridTreeRoot);
+        bspT.Transform(*hybridTreeRoot);
+        // serialize the scene
+        const ISceneNode& tmp = *hybridTreeRoot;
+        ofstream of("oeracer-physics-scene.bin");
+        Serialization::Serialize(tmp, &of);
+        of.close();
+        logger.info << "Creating and serializing the physics tree: done" << logger.end;
+    }
+    
+    // save a dot graph of the tree
+    ofstream dotfile("physics.dot", ofstream::out);
+    if (!dotfile.good()) {
+        logger.error << "Can not open 'physics.dot' "
+                     << "for output" << logger.end;
+    } else {
+        ASDotVisitor dot;
+        dot.Write(*hybridTreeRoot, &dotfile);
+        logger.info << "Saved physics graph to 'physics.dot'" << logger.end;
+    }
     FixedTimeStepPhysics* physic = new FixedTimeStepPhysics( hybridTreeRoot );
-    logger.info << "Preprocessing of physics tree: done" << logger.end;
 
     // Add FixedTimeStepPhysics module
     physic->AddRigidBody(box);
     engine.AddModule(*physic, IGameEngine::TICK_DEPENDENT);
 
     logger.info << "Preprocessing of static tree: started" << logger.end;
-    QuadTreeBuilder qtb(500,100);
-    QuadNode* qn = qtb.Build(*staticObjects);
-    rNode->AddNode(qn);
+    QuadTransformer quadT;
+    quadT.SetMaxFaceCount(500);
+    quadT.SetMaxQuadSize(100);
+    quadT.Transform(*staticObjects);
+    rNode->AddNode(staticObjects);
     logger.info << "Preprocessing of static tree: done" << logger.end;
 
     // Visualization of the frustum
