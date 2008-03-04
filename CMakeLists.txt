@@ -10,7 +10,7 @@ SET( OERACER_SOURCES
 # todo get rid of this!@#!
 # Include if using SDL under Mac OS X
 IF(APPLE)
-  SET(OERACER_SOURCES ${OERACER_SOURCES} ../../conf/mac/SDLMain.m)
+  SET(OERACER_SOURCES ${OERACER_SOURCES} ${SDL_MAIN_FOR_MAC})
 ENDIF(APPLE)
 
 # Project executable
@@ -28,6 +28,7 @@ TARGET_LINK_LIBRARIES(OERacer
   OpenEngine_Scene
   OpenEngine_Utils
   # Extensions
+  Extensions_SDL
   Extensions_FixedTimeStepPhysics
   ${BOOST_SERIALIZATION_LIB}
 )
