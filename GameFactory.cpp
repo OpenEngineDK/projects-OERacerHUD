@@ -31,6 +31,7 @@
 #include <Resources/GLSLResource.h>
 #include <Resources/TGAResource.h>
 #include <Resources/OBJResource.h>
+#include <Resources/DirectoryManager.h>
 #include <Resources/ResourceManager.h>
 #include <Scene/SceneNode.h>
 #include <Scene/GeometryNode.h>
@@ -147,14 +148,14 @@ bool GameFactory::SetupEngine(IGameEngine& engine) {
     
     // set the resources directory
     string resources = "projects/OERacer/data/";
-    ResourceManager::AppendPath(resources);
+    DirectoryManager::AppendPath(resources);
     logger.info << "Resource directory: " << resources << logger.end;
 
     // load the resource plug-ins
-    ResourceManager::AddModelPlugin(new OBJPlugin());
-    ResourceManager::AddTexturePlugin(new TGAPlugin());
-    ResourceManager::AddShaderPlugin(new GLSLPlugin());
-    
+    ResourceManager<IModelResource>::AddPlugin(new OBJPlugin());
+    ResourceManager<ITextureResource>::AddPlugin(new TGAPlugin());
+    ResourceManager<IShaderResource>::AddPlugin(new GLSLPlugin());
+
     // pointer to Box transformation node
     RigidBox* box = NULL;
     Vector<3,float> position(2, 100, 2);
@@ -194,7 +195,7 @@ bool GameFactory::SetupEngine(IGameEngine& engine) {
         }
         
         // Load the model
-        IModelResourcePtr mod_res = ResourceManager::CreateModel(mod_str);
+        IModelResourcePtr mod_res = ResourceManager<IModelResource>::Create(mod_str);
         mod_res->Load();
         if( mod_res->GetFaceSet() == NULL ) continue;
 
