@@ -29,6 +29,8 @@ TARGET_LINK_LIBRARIES(OERacer
   OpenEngine_Utils
   # Extensions
   Extensions_SDL
+  Extensions_TGAResource
+  Extensions_OBJResource
   Extensions_FixedTimeStepPhysics
   ${BOOST_SERIALIZATION_LIB}
 )
