@@ -197,17 +197,16 @@ bool GameFactory::SetupEngine(IGameEngine& engine) {
         // Load the model
         IModelResourcePtr mod_res = ResourceManager<IModelResource>::Create(mod_str);
         mod_res->Load();
-        if( mod_res->GetFaceSet() == NULL ) continue;
+        if( mod_res->GetSceneNode() == NULL ) continue;
 
-        GeometryNode* mod_node = new GeometryNode();
-        mod_node->SetFaceSet(mod_res->GetFaceSet());
+        ISceneNode* mod_node = mod_res->GetSceneNode();
         mod_res->Unload();
 
         TransformationNode* mod_tran = new TransformationNode();
         mod_tran->AddNode(mod_node);
         if (dynamic) {
             // Load ridget-box
-            box = new RigidBox( Box(*(mod_node->GetFaceSet())) );
+            box = new RigidBox( Box(*mod_node));
             box->SetCenter( position );
             box->SetTransformationNode(mod_tran);
 
