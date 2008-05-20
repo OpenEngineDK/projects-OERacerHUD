@@ -9,7 +9,7 @@
 using namespace OpenEngine::Devices;
 using namespace OpenEngine::Physics;
 
-class KeyboardHandler : public IModule {
+class KeyboardHandler : public IModule, public IListener<KeyboardEventArg> {
 private:
     bool up, down, left, right, mod;
     float step;
@@ -58,6 +58,10 @@ public:
             box->AddForce(dir * turn, 1);
             box->AddForce(dir * turn, 3);
         }
+    }
+
+    void Handle(KeyboardEventArg arg) {
+        (arg.type == KeyboardEventArg::PRESS) ? KeyDown(arg) : KeyUp(arg);
     }
 
     void KeyDown(KeyboardEventArg arg) {
@@ -120,12 +124,7 @@ public:
     }
     
     void BindToEventSystem() {
-        Listener<KeyboardHandler, KeyboardEventArg>* keyDown 
-            = new Listener<KeyboardHandler, KeyboardEventArg> (*this, &KeyboardHandler::KeyDown);
-        Listener<KeyboardHandler, KeyboardEventArg>* keyUp 
-            = new Listener<KeyboardHandler, KeyboardEventArg> (*this, &KeyboardHandler::KeyUp);
-        IKeyboard::keyDownEvent.Add(keyDown);
-        IKeyboard::keyUpEvent.Add(keyUp);
+        IKeyboard::keyEvent.Attach(*this);
     }
 };
 

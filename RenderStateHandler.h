@@ -6,7 +6,7 @@
 
 using namespace OpenEngine::Devices;
 
-class RenderStateHandler {
+class RenderStateHandler : public IListener<KeyboardEventArg> {
 private:
     RenderStateNode* rNode;
 public:
@@ -30,9 +30,7 @@ public:
     }
 
     void BindToEventSystem() {
-        Listener<RenderStateHandler, KeyboardEventArg>* rStateListener
-            = new Listener<RenderStateHandler, KeyboardEventArg> (*this, &RenderStateHandler::Handle);
-        IKeyboard::keyUpEvent.Add(rStateListener);
+        IKeyboard::keyEvent.Attach(*this);
     }
 };
 

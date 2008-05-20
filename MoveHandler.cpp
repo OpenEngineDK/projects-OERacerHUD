@@ -82,9 +82,8 @@ void MoveHandler::Process(const float dt, const float percent) {
 }
 
 // set state of keys on up/down events
-void MoveHandler::HandleDownEvent(KeyboardEventArg arg) { HandleKeyEvent(arg, true); }
-void MoveHandler::HandleUpEvent(KeyboardEventArg arg) { HandleKeyEvent(arg, false); }
-void MoveHandler::HandleKeyEvent(KeyboardEventArg arg, bool state) {        
+void MoveHandler::Handle(KeyboardEventArg arg) {
+    bool state = (arg.type == KeyboardEventArg::PRESS);
     switch (arg.sym) {
         // movement keys
     case KEY_w: forward = state; break;
@@ -101,13 +100,7 @@ void MoveHandler::HandleKeyEvent(KeyboardEventArg arg, bool state) {
 }
 
 void MoveHandler::BindToEventSystem() {
-    Listener<MoveHandler,KeyboardEventArg>* downl =
-        new Listener<MoveHandler,KeyboardEventArg>(*this,&MoveHandler::HandleDownEvent);
-    IKeyboard::keyDownEvent.Add(downl);
-
-    Listener<MoveHandler,KeyboardEventArg>* upl =
-        new Listener<MoveHandler,KeyboardEventArg>(*this,&MoveHandler::HandleUpEvent);
-    IKeyboard::keyUpEvent.Add(upl);
+    IKeyboard::keyEvent.Attach(*this);
 }
 
 } // NS Utils
