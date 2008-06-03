@@ -38,6 +38,8 @@
 #include <Scene/TransformationNode.h>
 #include <Utils/Statistics.h>
 
+#include <Scene/PointLightNode.h>
+
 // from AccelerationStructures extension
 #include <Scene/CollectedGeometryTransformer.h>
 #include <Scene/QuadTransformer.h>
@@ -213,6 +215,15 @@ bool GameFactory::SetupEngine(IGameEngine& engine) {
             camera->SetPosition(position + Vector<3,float>(-150,40,0));
             camera->LookAt(position);
             camera->Follow(mod_tran);
+
+        PointLightNode* pln = new PointLightNode();
+                
+        pln->constAtt = 0.5;
+        pln->linearAtt = 0.001;
+        pln->quadAtt = 0.0001;
+        
+        mod_tran->AddNode(pln);
+
         }
         current->AddNode(mod_tran);
 
