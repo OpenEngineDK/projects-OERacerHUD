@@ -26,6 +26,7 @@
 #include <Renderers/RenderStateNode.h>
 #include <Renderers/OpenGL/Renderer.h>
 #include <Renderers/OpenGL/RenderingView.h>
+#include <Renderers/OpenGL/TextureLoader.h>
 #include <Resources/IModelResource.h>
 #include <Resources/File.h>
 #include <Resources/GLSLResource.h>
@@ -95,9 +96,9 @@ GameFactory::GameFactory() {
 
     // Create a renderer.
     this->renderer = new Renderer();
-
+    renderer->initialize.Attach(*(new TextureLoader()));
     // Add a rendering view to the renderer
-    this->renderer->AddRenderingView(new MyRenderingView(*viewport));
+    renderer->process.Attach(*(new MyRenderingView(*viewport)));  // space leak
 }
 
 /**
