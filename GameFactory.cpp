@@ -37,6 +37,7 @@
 #include <Scene/SceneNode.h>
 #include <Scene/GeometryNode.h>
 #include <Scene/TransformationNode.h>
+#include <Scene/VertexArrayTransformer.h>
 #include <Utils/Statistics.h>
 
 #include <Scene/PointLightNode.h>
@@ -301,6 +302,11 @@ bool GameFactory::SetupEngine(IGameEngine& engine) {
     KeyboardHandler* keyHandler = new KeyboardHandler(camera,box,physic);
     keyHandler->BindToEventSystem();
     engine.AddModule(*keyHandler);
+
+    // Use vertex arrays
+    VertexArrayTransformer vaT;
+    vaT.Transform(*scene);
+
 
     // Return true to signal success.
     return true;
