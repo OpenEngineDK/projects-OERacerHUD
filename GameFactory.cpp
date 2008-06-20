@@ -38,6 +38,7 @@
 #include <Scene/GeometryNode.h>
 #include <Scene/TransformationNode.h>
 #include <Scene/VertexArrayTransformer.h>
+#include <Scene/DisplayListTransformer.h>
 #include <Utils/Statistics.h>
 
 #include <Scene/PointLightNode.h>
@@ -99,7 +100,11 @@ GameFactory::GameFactory() {
     this->renderer = new Renderer();
     renderer->initialize.Attach(*(new TextureLoader()));
     // Add a rendering view to the renderer
-    renderer->process.Attach(*(new MyRenderingView(*viewport)));  // space leak
+    MyRenderingView* rv = new MyRenderingView(*viewport);
+    DisplayListTransformer* dlt = new DisplayListTransformer(rv);
+    
+    renderer->process.Attach(*rv);  // space leak
+    renderer->initialize.Attach(*dlt);
 }
 
 /**
