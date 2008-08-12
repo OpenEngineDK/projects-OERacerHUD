@@ -1,0 +1,26 @@
+# Distribution file for the OERacer project.
+# http://www.openengine.dk/wiki/Projects/OERacer
+
+# main repository
+darcs / http://openengine.dk/code/openengine
+
+# project repository
+darcs /projects/OERacer http://openengine.dk/code/projects/OERacer
+
+# required extensions
+darcs /extensions/SDL                    http://openengine.dk/code/extensions/SDL
+darcs /extensions/OpenGLRenderer         http://openengine.dk/code/extensions/OpenGLRenderer
+darcs /extensions/TGAResource            http://openengine.dk/code/extensions/TGAResource
+darcs /extensions/OBJResource            http://openengine.dk/code/extensions/OBJResource
+darcs /extensions/FixedTimeStepPhysics   http://openengine.dk/code/extensions/FixedTimeStepPhysics
+darcs /extensions/AccelerationStructures http://openengine.dk/code/extensions/AccelerationStructures
+
+# windows libraries
+win32 /libraries http://openengine.dk/data/libraries/boost-win32.zip
+win32 /libraries http://openengine.dk/data/libraries/glew-win32.zip
+win32 /libraries http://openengine.dk/data/libraries/sdl-win32.zip
+win32 /libraries http://openengine.dk/data/libraries/dlls-win32.zip
+
+# project data
+any /projects/OERacer/data http://openengine.dk/data/models/Sahara001.zip
+any /projects/OERacer/data http://openengine.dk/data/models/FutureTank.zip
