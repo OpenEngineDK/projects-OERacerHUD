@@ -228,13 +228,13 @@ void SetupRendering(Config& config) {
 
     // Setup a rendering view
     MyRenderingView* rv = new MyRenderingView(*config.viewport);
-    config.renderer->process.Attach(*rv);
+    config.renderer->ProcessEvent().Attach(*rv);
 
     // Add rendering initialization tasks
     TextureLoader* tl = new TextureLoader();
     DisplayListTransformer* dlt = new DisplayListTransformer(rv);
-    config.renderer->initialize.Attach(*tl);
-    config.renderer->initialize.Attach(*dlt);
+    config.renderer->InitializeEvent().Attach(*tl);
+    config.renderer->InitializeEvent().Attach(*dlt);
 
     // Transform the scene to use vertex arrays
     VertexArrayTransformer vaT;
