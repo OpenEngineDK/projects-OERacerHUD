@@ -35,7 +35,7 @@ void MoveHandler::Handle(DeinitializeEventArg arg) {}
 
 void MoveHandler::Handle(ProcessEventArg arg) {
     MouseState s = mouse.GetState();
-    unsigned long dt = timer.GetElapsedTimeAndReset();
+    unsigned int dt = timer.GetElapsedTimeAndReset().AsInt();
 
     // reset the position, if out of the box
     if (minXY > s.x || s.x > maxXY) {
@@ -46,7 +46,7 @@ void MoveHandler::Handle(ProcessEventArg arg) {
     }
     mouse.SetCursor(s.x,s.y);
 
-    float ms=.1*dt, rs=.007; // scaling factors
+    float ms=.0001*dt, rs=.007; // scaling factors
 
     // compute move difference
     float x=0, z=0;

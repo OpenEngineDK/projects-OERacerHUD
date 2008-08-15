@@ -58,7 +58,7 @@ public:
     void Handle(DeinitializeEventArg arg) {}
     void Handle(ProcessEventArg arg) {
 
-        float delta = (float) timer.GetElapsedTimeAndReset() / 100;
+        float delta = (float) timer.GetElapsedTimeAndReset().AsInt() / 100000;
 
         if (box == NULL || !( up || down || left || right )) return;
 
