@@ -396,6 +396,7 @@ void SetupScene(Config& config) {
             config.physicBody = new RigidBox( Box(*mod_node));
             config.physicBody->SetCenter( position );
             config.physicBody->SetTransformationNode(mod_tran);
+	    config.physicBody->SetGravity(Vector<3,float>(0, -9.82*20, 0));
             // Bind the follow camera
             config.camera->SetPosition(position + Vector<3,float>(-150,40,0));
             config.camera->LookAt(position);
