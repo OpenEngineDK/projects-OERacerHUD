@@ -1,13 +1,30 @@
 #ifndef _KEYBOARD_HANDLER_
 #define _KEYBOARD_HANDLER_
 
+#include <Core/IListener.h>
+#include <Core/IEngine.h>
 #include <Devices/IKeyboard.h>
+#include <Devices/Symbols.h>
 #include <Display/Camera.h>
 #include <Physics/FixedTimeStepPhysics.h>
 #include <Physics/RigidBox.h>
+#include <Math/Matrix.h>
+#include <Utils/Timer.h>
 
-using namespace OpenEngine::Devices;
-using namespace OpenEngine::Physics;
+using OpenEngine::Core::IModule;
+using OpenEngine::Core::IListener;
+using OpenEngine::Core::IEngine;
+using OpenEngine::Core::InitializeEventArg;
+using OpenEngine::Core::ProcessEventArg;
+using OpenEngine::Core::DeinitializeEventArg;
+using OpenEngine::Devices::KeyboardEventArg;
+using OpenEngine::Display::Camera;
+using OpenEngine::Physics::RigidBox;
+using OpenEngine::Physics::FixedTimeStepPhysics;
+using OpenEngine::Math::Matrix;
+using OpenEngine::Utils::Timer;
+
+namespace keys = OpenEngine::Devices;
 
 class KeyboardHandler : public IModule, public IListener<KeyboardEventArg> {
 private:
@@ -16,23 +33,39 @@ private:
     Camera* camera;
     RigidBox* box;
     FixedTimeStepPhysics* physics;
-public:
-    KeyboardHandler(Camera* camera, RigidBox* box, FixedTimeStepPhysics* physics)
-        : up(false), down(false), left(false), right(false), camera(camera), box(box), physics(physics) {}
+    IEngine& engine;
+    Timer timer;
 
-    bool IsTypeOf(const std::type_info& inf) { return typeid(KeyboardHandler) == inf; }
-    void Initialize() {
+public:
+    KeyboardHandler(IEngine& engine,
+                    Camera* camera,
+                    RigidBox* box,
+                    FixedTimeStepPhysics* physics)
+        : up(false)
+        , down(false)
+        , left(false)
+        , right(false)
+        , camera(camera)
+        , box(box)
+        , physics(physics)
+        , engine(engine)
+    {}
+
+    void Handle(InitializeEventArg arg) {
         step = 0.0f;
+        timer.Start();
     }
-    void Deinitialize() {}
-    void Process(const float deltaTime, const float percent) {
-        if( box == NULL ) return;
+    void Handle(DeinitializeEventArg arg) {}
+    void Handle(ProcessEventArg arg) {
+
+        float delta = (float) timer.GetElapsedTimeAndReset() / 100;
+
+        if (box == NULL || !( up || down || left || right )) return;
+
         static float speed = 1750.0f;
         static float turn = 550.0f;
-        Matrix<3,3,float> m; //orientation
-        if( up || down || left || right ) m = box->GetRotationMatrix();
+        Matrix<3,3,float> m(box->GetRotationMatrix());
 
-        float delta = deltaTime / 1000 * 8;
         // Forward 
         if( up ){
             Vector<3,float> dir = m.GetRow(0) * delta;
@@ -66,8 +99,8 @@ public:
 
     void KeyDown(KeyboardEventArg arg) {
         switch ( arg.sym ) {
-        case KEY_r: {
-            physics->Initialize();
+        case keys::KEY_r: {
+            physics->Handle(InitializeEventArg());
             if( physics != NULL ){
                 if( box != NULL ) {
                     box->ResetForces();
@@ -78,33 +111,33 @@ public:
             break;
         }
 
-        case KEY_SPACE:{
+        case keys::KEY_SPACE:{
             if( physics != NULL ){
                 physics->TogglePause();
             }
             break;
         }
         // Move the car forward
-        case KEY_UP:    up    = true; break;
-        case KEY_DOWN:  down  = true; break;
-        case KEY_LEFT:  left  = true; break;
-        case KEY_RIGHT: right = true; break;
+        case keys::KEY_UP:    up    = true; break;
+        case keys::KEY_DOWN:  down  = true; break;
+        case keys::KEY_LEFT:  left  = true; break;
+        case keys::KEY_RIGHT: right = true; break;
 
         // Log Camera position 
-        case KEY_c: {
+        case keys::KEY_c: {
             Vector<3,float> camPos = camera->GetPosition();
             logger.info << "Camera Position: " << camPos << logger.end;
             break;
         }
 
         // Increase/decrease time in Physic
-        case KEY_PLUS:  mod = true; step =  0.001f; break;
-        case KEY_MINUS: mod = true; step = -0.001f; break;
+        case keys::KEY_PLUS:  mod = true; step =  0.001f; break;
+        case keys::KEY_MINUS: mod = true; step = -0.001f; break;
         
 
         // Quit on Escape
-        case KEY_ESCAPE:
-            IGameEngine::Instance().Stop();
+        case keys::KEY_ESCAPE:
+            engine.Stop();
             break;
         default: break;
         }
@@ -112,19 +145,15 @@ public:
 
     void KeyUp(KeyboardEventArg arg) {
         switch ( arg.sym ) {
-        case KEY_UP:    up    = false; break;
-        case KEY_DOWN:  down  = false; break;
-        case KEY_LEFT:  left  = false; break;
-        case KEY_RIGHT: right = false; break;
-        case KEY_PLUS:  mod   = false; break;
-        case KEY_MINUS: mod   = false; break;
+        case keys::KEY_UP:    up    = false; break;
+        case keys::KEY_DOWN:  down  = false; break;
+        case keys::KEY_LEFT:  left  = false; break;
+        case keys::KEY_RIGHT: right = false; break;
+        case keys::KEY_PLUS:  mod   = false; break;
+        case keys::KEY_MINUS: mod   = false; break;
 
         default: break;
         }
-    }
-    
-    void BindToEventSystem() {
-        IKeyboard::keyEvent.Attach(*this);
     }
 };
 

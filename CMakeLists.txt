@@ -3,7 +3,6 @@
 SET( OERACER_SOURCES
   # Add all the cpp source files here
   main.cpp
-  GameFactory.cpp
   MoveHandler.cpp
 )
 
