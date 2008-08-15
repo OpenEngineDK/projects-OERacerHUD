@@ -399,7 +399,7 @@ void SetupScene(Config& config) {
 	    config.physicBody->SetGravity(Vector<3,float>(0, -9.82*20, 0));
             // Bind the follow camera
             config.camera->SetPosition(position + Vector<3,float>(-150,40,0));
-            config.camera->LookAt(position);
+            config.camera->LookAt(position - Vector<3,float>(0,30,0));
             config.camera->Follow(mod_tran);
             // Set up a light node
             PointLightNode* pln = new PointLightNode();
