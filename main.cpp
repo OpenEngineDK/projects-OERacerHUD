@@ -59,6 +59,8 @@
 // Utilities and logger
 #include <Logging/Logger.h>
 #include <Logging/StreamLogger.h>
+#include <Utils/MoveHandler.h>
+#include <Utils/QuitHandler.h>
 #include <Utils/Statistics.h>
 
 // FixedTimeStepPhysics extension
@@ -67,8 +69,6 @@
 
 // OERacer utility files
 #include "KeyboardHandler.h"
-#include "MoveHandler.h"
-#include "QuitHandler.h"
 
 // Additional namespaces
 using namespace OpenEngine::Core;

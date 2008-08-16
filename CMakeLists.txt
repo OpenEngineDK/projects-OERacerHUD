@@ -3,7 +3,6 @@
 SET( OERACER_SOURCES
   # Add all the cpp source files here
   main.cpp
-  MoveHandler.cpp
 )
 
 # todo get rid of this!@#!
@@ -31,5 +30,6 @@ TARGET_LINK_LIBRARIES(OERacer
   Extensions_TGAResource
   Extensions_OBJResource
   Extensions_FixedTimeStepPhysics
+  Extensions_GenericHandlers
   ${BOOST_SERIALIZATION_LIB}
 )
