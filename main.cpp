@@ -257,8 +257,12 @@ void SetupDevices(Config& config) {
         throw Exception("Setup keyboard dependencies are not satisfied.");
 
     // Create the mouse and keyboard input modules
-    config.keyboard = new SDLInput();
-    config.mouse = (IMouse*)config.keyboard;
+    SDLInput* input = new SDLInput();
+    config.engine.InitializeEvent().Attach(*input);
+    config.engine.ProcessEvent().Attach(*input);
+    config.engine.DeinitializeEvent().Attach(*input);
+    config.keyboard = input;
+    config.mouse    = input;
 
     // Bind the quit handler
     QuitHandler* quit_h = new QuitHandler(config.engine);
@@ -274,14 +278,10 @@ void SetupDevices(Config& config) {
                                                       config.physicBody,
                                                       config.physics);
     config.keyboard->KeyEvent().Attach(*keyHandler);
+
     config.engine.InitializeEvent().Attach(*keyHandler);
     config.engine.ProcessEvent().Attach(*keyHandler);
     config.engine.DeinitializeEvent().Attach(*keyHandler);
-
-    // Bind to the engine for processing time
-    config.engine.InitializeEvent().Attach(*config.mouse);
-    config.engine.ProcessEvent().Attach(*config.mouse);
-    config.engine.DeinitializeEvent().Attach(*config.mouse);
 
     config.engine.InitializeEvent().Attach(*move_h);
     config.engine.ProcessEvent().Attach(*move_h);
