@@ -1,11 +1,11 @@
-# Distribution file for the OERacer project.
-# http://www.openengine.dk/wiki/Projects/OERacer
+# Distribution file for the OERacerHUD project.
+
 
 # main repository
 darcs / http://openengine.dk/code/openengine
 
 # project repository
-darcs /projects/OERacer http://openengine.dk/code/projects/OERacer
+darcs /projects/OERacerHUD http://openengine.dk/code/projects/OERacerHUD
 
 # required extensions
 darcs /extensions/SDL                    http://openengine.dk/code/extensions/SDL
