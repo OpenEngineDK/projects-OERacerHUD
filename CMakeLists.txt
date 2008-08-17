@@ -1,6 +1,6 @@
 
 # Project source code list
-SET( OERACER_SOURCES
+SET( OERACERHUD_SOURCES
   # Add all the cpp source files here
   main.cpp
 )
@@ -8,14 +8,14 @@ SET( OERACER_SOURCES
 # todo get rid of this!@#!
 # Include if using SDL under Mac OS X
 IF(APPLE)
-  SET(OERACER_SOURCES ${OERACER_SOURCES} ${SDL_MAIN_FOR_MAC})
+  SET(OERACERHUD_SOURCES ${OERACERHUD_SOURCES} ${SDL_MAIN_FOR_MAC})
 ENDIF(APPLE)
 
 # Project executable
-ADD_EXECUTABLE(OERacer ${OERACER_SOURCES})
+ADD_EXECUTABLE(OERacerHUD ${OERACERHUD_SOURCES})
 
 # Project dependencies
-TARGET_LINK_LIBRARIES(OERacer
+TARGET_LINK_LIBRARIES(OERacerHUD
   OpenEngine_Core
   OpenEngine_Logging
   OpenEngine_Display
@@ -31,5 +31,6 @@ TARGET_LINK_LIBRARIES(OERacer
   Extensions_OBJResource
   Extensions_FixedTimeStepPhysics
   Extensions_GenericHandlers
+  Extensions_OEGUI	
   ${BOOST_SERIALIZATION_LIB}
 )

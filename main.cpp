@@ -67,6 +67,12 @@
 #include <Physics/FixedTimeStepPhysics.h>
 #include <Physics/RigidBox.h>
 
+// LayerNode
+#include <Scene/LayerNode.h>
+#include <Display/TextSurface.h>
+#include <Utils/LayerStatistics.h>
+
+
 // OERacer utility files
 #include "KeyboardHandler.h"
 
@@ -91,6 +97,7 @@ struct Config {
     IRenderer*            renderer;
     IMouse*               mouse;
     IKeyboard*            keyboard;
+    IJoystick*            joystick;
     ISceneNode*           renderingScene;
     ISceneNode*           dynamicScene;
     ISceneNode*           staticScene;
@@ -263,6 +270,7 @@ void SetupDevices(Config& config) {
     config.engine.DeinitializeEvent().Attach(*input);
     config.keyboard = input;
     config.mouse    = input;
+    config.joystick = input;
 
     // Bind the quit handler
     QuitHandler* quit_h = new QuitHandler(config.engine);
@@ -271,6 +279,8 @@ void SetupDevices(Config& config) {
     // Register movement handler to be able to move the camera
     MoveHandler* move_h = new MoveHandler(*config.camera, *config.mouse);
     config.keyboard->KeyEvent().Attach(*move_h);
+    config.joystick->JoystickButtonEvent().Attach(*move_h);
+    config.joystick->JoystickAxisEvent().Attach(*move_h);
 
     // Keyboard bindings to the rigid box and camera
     KeyboardHandler* keyHandler = new KeyboardHandler(config.engine,
@@ -418,6 +428,32 @@ void SetupScene(Config& config) {
     quadT.SetMaxFaceCount(500);
     quadT.SetMaxQuadSize(100);
     quadT.Transform(*config.staticScene);
+
+
+    
+    // HUD
+
+  CairoSurfaceResourcePtr sr = 
+      CairoSurfaceResourcePtr(new CairoSurfaceResource(CairoSurfaceResource::CreateCairoSurface(1024,128)));
+
+  
+  TextSurface *ts = new TextSurface(*sr, string("Hmm"));
+
+  LayerNode *ln = new LayerNode(1024, 768); 
+  Layer layer(0,0);
+  
+    //babeLayer.texr = ResourceManager<ITextureResource>::Create("hud.tga");
+  layer.texr = sr;
+  ln->AddLayer(layer); // = sr; //ResourceManager<ITextureResource>::Create("hud.tga");
+  //ln->AddLayer(*layerStat);
+  //ln->AddLayer(babeLayer);
+  config.renderingScene->AddNode(ln);
+  
+
+  LayerStatistics* layerStat = new LayerStatistics(1000000, ts);
+  config.engine.ProcessEvent().Attach(*layerStat);
+
+
 }
 
 void SetupDebugging(Config& config) {
