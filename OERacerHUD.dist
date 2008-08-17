@@ -15,6 +15,7 @@ darcs /extensions/OBJResource            http://openengine.dk/code/extensions/OB
 darcs /extensions/FixedTimeStepPhysics   http://openengine.dk/code/extensions/FixedTimeStepPhysics
 darcs /extensions/AccelerationStructures http://openengine.dk/code/extensions/AccelerationStructures
 darcs /extensions/OEGUI			 http://openengine.dk/code/extensions/OEGUI
+darcs /extensions/GenericHandlers        http://openengine.dk/code/extensions/GenericHandlers
 
 # windows libraries
 win32 /libraries http://openengine.dk/data/libraries/boost-win32.zip
