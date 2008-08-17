@@ -182,7 +182,7 @@ int main(int argc, char** argv) {
 void SetupResources(Config& config) {
     // set the resources directory
     // @todo we should check that this path exists
-    string resources = "projects/OERacer/data/";
+    string resources = "projects/OERacerHUD/data/";
     DirectoryManager::AppendPath(resources);
 
     // load resource plug-ins
