@@ -280,6 +280,7 @@ void SetupDevices(Config& config) {
     MoveHandler* move_h = new MoveHandler(*config.camera, *config.mouse);
     config.keyboard->KeyEvent().Attach(*move_h);
 
+    config.joystick->JoystickAxisEvent().Attach(*move_h);
 
     // Keyboard bindings to the rigid box and camera
     KeyboardHandler* keyHandler = new KeyboardHandler(config.engine,

@@ -3,6 +3,7 @@
 SET( OERACERHUD_SOURCES
   # Add all the cpp source files here
   main.cpp
+  KeyboardHandler.cpp
 )
 
 # todo get rid of this!@#!
