@@ -279,8 +279,7 @@ void SetupDevices(Config& config) {
     // Register movement handler to be able to move the camera
     MoveHandler* move_h = new MoveHandler(*config.camera, *config.mouse);
     config.keyboard->KeyEvent().Attach(*move_h);
-    config.joystick->JoystickButtonEvent().Attach(*move_h);
-    config.joystick->JoystickAxisEvent().Attach(*move_h);
+
 
     // Keyboard bindings to the rigid box and camera
     KeyboardHandler* keyHandler = new KeyboardHandler(config.engine,
@@ -288,6 +287,10 @@ void SetupDevices(Config& config) {
                                                       config.physicBody,
                                                       config.physics);
     config.keyboard->KeyEvent().Attach(*keyHandler);
+
+    config.joystick->JoystickButtonEvent().Attach(*keyHandler);
+    config.joystick->JoystickAxisEvent().Attach(*keyHandler);
+
 
     config.engine.InitializeEvent().Attach(*keyHandler);
     config.engine.ProcessEvent().Attach(*keyHandler);

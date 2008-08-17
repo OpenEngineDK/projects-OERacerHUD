@@ -4,6 +4,7 @@
 #include <Core/IListener.h>
 #include <Core/IEngine.h>
 #include <Devices/IKeyboard.h>
+#include <Devices/IJoystick.h>
 #include <Devices/Symbols.h>
 #include <Display/Camera.h>
 #include <Physics/FixedTimeStepPhysics.h>
@@ -26,9 +27,12 @@ using OpenEngine::Utils::Timer;
 
 namespace keys = OpenEngine::Devices;
 
-class KeyboardHandler : public IModule, public IListener<KeyboardEventArg> {
+class KeyboardHandler : public IModule, public IListener<KeyboardEventArg>,
+			public IListener<JoystickButtonEventArg>,
+			public IListener<JoystickAxisEventArg> {
+    
 private:
-    bool up, down, left, right, mod;
+    float up, down, left, right, mod;
     float step;
     Camera* camera;
     RigidBox* box;
@@ -41,10 +45,10 @@ public:
                     Camera* camera,
                     RigidBox* box,
                     FixedTimeStepPhysics* physics)
-        : up(false)
-        , down(false)
-        , left(false)
-        , right(false)
+        : up(0)
+        , down(0)
+        , left(0)
+        , right(0)
         , camera(camera)
         , box(box)
         , physics(physics)
@@ -69,27 +73,27 @@ public:
         // Forward 
         if( up ){
             Vector<3,float> dir = m.GetRow(0) * delta;
-            box->AddForce(dir * speed, 1);
-            box->AddForce(dir * speed, 2);
-            box->AddForce(dir * speed, 3);
-            box->AddForce(dir * speed, 4);
+            box->AddForce(dir * speed*up, 1);
+            box->AddForce(dir * speed*up, 2);
+            box->AddForce(dir * speed*up, 3);
+            box->AddForce(dir * speed*up, 4);
         }
         if( down ){
             Vector<3,float> dir = -m.GetRow(0) * delta;
-            box->AddForce(dir * speed, 5);
-            box->AddForce(dir * speed, 6);
-            box->AddForce(dir * speed, 7);
-            box->AddForce(dir * speed, 8);
+            box->AddForce(dir * speed*down, 5);
+            box->AddForce(dir * speed*down, 6);
+            box->AddForce(dir * speed*down, 7);
+            box->AddForce(dir * speed*down, 8);
         }
         if( left ){
             Vector<3,float> dir = -m.GetRow(2) * delta;
-            box->AddForce(dir * turn, 2);
-            box->AddForce(dir * turn, 4);
+            box->AddForce(dir * turn*left, 2);
+            box->AddForce(dir * turn*left, 4);
         }
         if( right ) {
             Vector<3,float> dir = m.GetRow(2) * delta;
-            box->AddForce(dir * turn, 1);
-            box->AddForce(dir * turn, 3);
+            box->AddForce(dir * turn*right, 1);
+            box->AddForce(dir * turn*right, 3);
         }
     }
 
@@ -118,10 +122,10 @@ public:
             break;
         }
         // Move the car forward
-        case keys::KEY_UP:    up    = true; break;
-        case keys::KEY_DOWN:  down  = true; break;
-        case keys::KEY_LEFT:  left  = true; break;
-        case keys::KEY_RIGHT: right = true; break;
+        case keys::KEY_UP:    up    = 1; break;
+        case keys::KEY_DOWN:  down  = 1; break;
+        case keys::KEY_LEFT:  left  = 1; break;
+        case keys::KEY_RIGHT: right = 1; break;
 
         // Log Camera position 
         case keys::KEY_c: {
@@ -145,16 +149,54 @@ public:
 
     void KeyUp(KeyboardEventArg arg) {
         switch ( arg.sym ) {
-        case keys::KEY_UP:    up    = false; break;
-        case keys::KEY_DOWN:  down  = false; break;
-        case keys::KEY_LEFT:  left  = false; break;
-        case keys::KEY_RIGHT: right = false; break;
+        case keys::KEY_UP:    up    = 0; break;
+        case keys::KEY_DOWN:  down  = 0; break;
+        case keys::KEY_LEFT:  left  = 0; break;
+        case keys::KEY_RIGHT: right = 0; break;
         case keys::KEY_PLUS:  mod   = false; break;
         case keys::KEY_MINUS: mod   = false; break;
 
         default: break;
         }
     }
+
+void Handle(JoystickButtonEventArg arg) {
+    
+    switch (arg.button) {
+    case keys::JBUTTON_FOUR: {
+	physics->Handle(InitializeEventArg());
+	if( physics != NULL ){
+	    if( box != NULL ) {
+		box->ResetForces();
+		box->SetCenter( Vector<3,float>(2, 1, 2) );
+		logger.info << "Reset Physics" << logger.end;
+	    }
+	}
+	break;
+    }
+    
+    default:
+	break; // none
+    }
+
+    logger.info << "joy: " << arg.button << logger.end;
+
+}
+
+void Handle(JoystickAxisEventArg arg) {
+
+    float max = 1 << 15;
+
+    up = (-arg.state.axisState[1])/max;
+    down = (arg.state.axisState[1])/max;
+
+    left = (-arg.state.axisState[0])/max;
+    right = (arg.state.axisState[0])/max;
+    
+}
+
+
+
 };
 
 #endif
