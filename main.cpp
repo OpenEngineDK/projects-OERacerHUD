@@ -364,7 +364,7 @@ void SetupScene(Config& config) {
     Vector<3,float> position(2, 100, 2);
 
     // Add models from models.txt to the scene
-    ifstream* mfile = File::Open("projects/OERacer/models.txt");
+    ifstream* mfile = File::Open("projects/OERacerHUD/models.txt");
     
     bool dynamic = false;
     while (!mfile->eof()) {
