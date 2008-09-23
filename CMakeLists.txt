@@ -22,7 +22,6 @@ TARGET_LINK_LIBRARIES(OERacerHUD
   OpenEngine_Display
   OpenEngine_Devices
   OpenEngine_Renderers
-  OpenEngine_Renderers_OpenGL
   OpenEngine_Resources
   OpenEngine_Scene
   OpenEngine_Utils
